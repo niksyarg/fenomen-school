@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="ka">
+<head>
+    <meta charset="UTF-8">
+    <title>FENOMEN | LIVE მასტერკლასი</title>
+    <style>
+        body { 
+            font-family: 'Segoe UI', sans-serif; 
+            background: #0f172a; 
+            color: white; 
+            margin: 0; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            min-height: 100vh;
+        }
+        .header { padding: 20px; text-align: center; }
+        .main-layout { 
+            display: flex; 
+            gap: 20px; 
+            width: 95%; 
+            max-width: 1200px; 
+            margin-bottom: 40px;
+        }
+        /* Окно видео */
+        .video-side { flex: 2; }
+        .video-wrapper { 
+            position: relative; 
+            padding-bottom: 56.25%; 
+            height: 0; 
+            background: #000; 
+            border-radius: 15px; 
+            overflow: hidden; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+        .video-wrapper iframe { 
+            position: absolute; 
+            top: 0; left: 0; width: 100%; height: 100%; border: none; 
+        }
+        /* Чат вебинара */
+        .chat-side { 
+            flex: 1; 
+            background: #1e293b; 
+            border-radius: 15px; 
+            display: flex; 
+            flex-direction: column; 
+            height: 500px;
+        }
+        .chat-header { padding: 15px; border-bottom: 1px solid #334155; font-weight: bold; }
+        .chat-messages { flex: 1; padding: 15px; overflow-y: auto; font-size: 14px; }
+        .chat-input-area { padding: 15px; display: flex; gap: 10px; }
+        .chat-input-area input { 
+            flex: 1; background: #334155; border: none; padding: 10px; 
+            border-radius: 5px; color: white; outline: none; 
+        }
+        /* Кнопка под видео */
+        .cta-box { 
+            background: white; 
+            color: #1a2a6c; 
+            padding: 30px; 
+            border-radius: 15px; 
+            margin-top: 20px; 
+            text-align: center;
+        }
+        .btn-join { 
+            background: #fdbb2d; 
+            color: #1a2a6c; 
+            padding: 15px 40px; 
+            border-radius: 50px; 
+            font-size: 20px; 
+            font-weight: bold; 
+            text-decoration: none; 
+            display: inline-block; 
+            transition: 0.3s;
+        }
+        .btn-join:hover { transform: scale(1.05); background: #fca311; }
+
+        @media (max-width: 900px) {
+            .main-layout { flex-direction: column; }
+            .chat-side { height: 300px; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="header">
+    <h1 style="color: #fdbb2d; margin-bottom: 5px;">FENOMEN 🎓 LIVE</h1>
+    <p>რუსული ენის უფასო მასტერკლასი ნიკ სიარგთან ერთად</p>
+</div>
+
+<div class="main-layout">
+    <div class="video-side">
+        <div class="video-wrapper">
+            <iframe id="live-stream" src="https://www.youtube.com/embed/live_stream?channel=UC-YOUR-CHANNEL-ID" allowfullscreen></iframe>
+        </div>
+        
+        <div class="cta-box">
+            <h3>მოგეწონათ გაკვეთილი? დაიწყეთ სწავლა დღესვე! 🚀</h3>
+            <p>მიიღეთ სრული წვდომა კურსზე, პირად ჩატზე და დავალებებზე.</p>
+            <a href="kabineti.html" class="btn-join">დაიკავეთ ადგილი კურსზე</a>
+        </div>
+    </div>
+
+    <div class="chat-side">
+        <div class="chat-header">💬 კითხვა-პასუხი</div>
+        <div id="webinar-chat" class="chat-messages">
+            <div style="color: #94a3b8;">მოგესალმებით! დასვით თქვენი კითხვები აქ...</div>
+        </div>
+        <div class="chat-input-area">
+            <input type="text" id="webinar-msg" placeholder="დაწერეთ...">
+            <button onclick="sendWebinarMsg()" style="background: #fdbb2d; border: none; padding: 10px; border-radius: 5px; cursor: pointer; font-weight: bold;">➤</button>
+        </div>
+    </div>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+<script>
+    const firebaseConfig = {
+        apiKey: "AIzaSyADYoNWoYidn2VUZNp3p_gQ6oQpjqz84_s",
+        authDomain: "fenomen-school-2026.firebaseapp.com",
+        projectId: "fenomen-school-2026",
+        storageBucket: "fenomen-school-2026.firebasestorage.app",
+        messagingSenderId: "569695363829",
+        appId: "1:569695363829:web:4b21ae0a29d2eaa5769bbc"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+
+    // Чат вебинара (общий для всех зрителей)
+    function sendWebinarMsg() {
+        const txt = document.getElementById('webinar-msg').value;
+        if(!txt) return;
+        db.ref('webinar_chat').push({ text: txt, time: new Date().toLocaleTimeString() });
+        document.getElementById('webinar-msg').value = '';
+    }
+
+    db.ref('webinar_chat').limitToLast(10).on('value', snap => {
+        const box = document.getElementById('webinar-chat');
+        box.innerHTML = '';
+        snap.forEach(child => {
+            const m = child.val();
+            box.innerHTML += `<div style="margin-bottom:10px;"><b>სტუმარი:</b> ${m.text} <small style="opacity:0.5">${m.time}</small></div>`;
+        });
+        box.scrollTop = box.scrollHeight;
+    });
+</script>
+
+</body>
+
+</html>

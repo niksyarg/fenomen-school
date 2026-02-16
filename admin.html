@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="ka">
+<head>
+    <meta charset="UTF-8">
+    <title>FENOMEN ADMIN | მართვა</title>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; background: #f0f2f5; margin: 0; display: flex; }
+        .sidebar { width: 260px; background: #1a2a6c; height: 100vh; color: white; padding: 25px; position: fixed; }
+        .content { margin-left: 310px; padding: 40px; width: calc(100% - 310px); }
+        .card { background: white; padding: 20px; border-radius: 15px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); margin-bottom: 25px; }
+        .tabs { display: flex; gap: 10px; margin-bottom: 20px; }
+        .tab-btn { padding: 12px 20px; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; background: #ddd; display: flex; align-items: center; }
+        .tab-btn.active { background: #fdbb2d; color: #1a2a6c; }
+        .badge { background: #ff4757; color: white; border-radius: 50%; padding: 2px 7px; font-size: 11px; margin-left: 5px; display: none; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { padding: 12px; text-align: left; border-bottom: 1px solid #eee; }
+        .note-input { width: 100%; border: 1px solid #eee; background: #f9f9f9; padding: 8px; border-radius: 5px; }
+        .chat-container { display: flex; gap: 20px; height: 450px; }
+        .chat-list { width: 30%; border-right: 1px solid #eee; overflow-y: auto; }
+        .chat-window { width: 70%; display: flex; flex-direction: column; }
+        .messages-area { flex: 1; overflow-y: auto; background: #f4f4f4; padding: 15px; border-radius: 10px; margin-bottom: 10px; display: flex; flex-direction: column; }
+        .msg { margin-bottom: 10px; padding: 8px 12px; border-radius: 10px; max-width: 80%; }
+        .msg.student { background: white; align-self: flex-start; }
+        .msg.teacher { background: #1a2a6c; color: white; align-self: flex-end; }
+        .btn-action { background: #1a2a6c; color: white; border: none; padding: 10px 15px; border-radius: 6px; cursor: pointer; }
+        .btn-activate { background: #28a745; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; font-size: 11px; margin-bottom: 5px; }
+        
+        .level-badge { padding: 3px 8px; border-radius: 4px; font-weight: bold; font-size: 11px; }
+        .A1 { background: #e3f2fd; color: #1976d2; }
+        .B1 { background: #fff3e0; color: #f57c00; }
+        .C1 { background: #e8f5e9; color: #388e3c; }
+
+        /* Стиль кнопки курсов */
+        .btn-course {
+            display: block;
+            background: #fdbb2d;
+            color: #1a2a6c;
+            text-decoration: none;
+            text-align: center;
+            padding: 12px;
+            border-radius: 8px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            transition: 0.3s;
+        }
+        .btn-course:hover { background: #fff; transform: translateY(-2px); }
+    </style>
+</head>
+<body>
+
+<div class="sidebar">
+    <h2>FENOMEN ADMIN</h2>
+    <p>ნიკოლოზ სიარგ</p>
+    <hr style="opacity: 0.2; margin-bottom: 20px;">
+    
+    <a href="course.html" class="btn-course">📖 სასწავლო კურსები</a>
+    
+    <button onclick="logout()" style="background:none; border: 1px solid white; color: white; width: 100%; padding: 10px; border-radius: 8px; cursor: pointer;">გამოსვლა</button>
+</div>
+
+<div class="content">
+    <div class="tabs">
+        <button class="tab-btn active" onclick="switchTab('users-tab')">👥 მოსწავლეები</button>
+        <button class="tab-btn" onclick="switchTab('homework-tab')">📝 დავალებები <span id="hw-badge" class="badge">!</span></button>
+        <button class="tab-btn" onclick="switchTab('messages-tab')">💬 ჩატი <span id="msg-badge" class="badge">!</span></button>
+    </div>
+
+    <div id="users-tab" class="tab-content card">
+        <table>
+            <thead>
+                <tr>
+                    <th>მოსწავლე / ტელეფონი</th>
+                    <th>ტარიფი / დონე</th>
+                    <th>მართვა</th>
+                    <th>შენიშვნები</th>
+                </tr>
+            </thead>
+            <tbody id="admin-user-table"></tbody>
+        </table>
+    </div>
+
+    <div id="homework-tab" class="tab-content card" style="display:none;">
+        <div id="admin-hw-list"></div>
+    </div>
+
+    <div id="messages-tab" class="tab-content card" style="display:none;">
+        <div class="chat-container">
+            <div class="chat-list" id="admin-chat-list"></div>
+            <div class="chat-window">
+                <h4 id="active-chat-title">აირჩიეთ ჩატი</h4>
+                <div id="admin-messages-display" class="messages-area"></div>
+                <div style="display:flex; gap:10px;">
+                    <input type="text" id="admin-reply-input" style="flex:1; padding:10px;" placeholder="პასუხი...">
+                    <button class="btn-action" onclick="sendAdminMessage()">გაგზავნა</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+  const firebaseConfig = {
+    apiKey: "AIzaSyADYoNWoYidn2VUZNp3p_gQ6oQpjqz84_s",
+    authDomain: "fenomen-school-2026.firebaseapp.com",
+    projectId: "fenomen-school-2026",
+    storageBucket: "fenomen-school-2026.firebasestorage.app",
+    messagingSenderId: "569695363829",
+    appId: "1:569695363829:web:4b21ae0a29d2eaa5769bbc"
+  };
+  firebase.initializeApp(firebaseConfig);
+  const db = firebase.database();
+  let selectedUid = null;
+  let allUsers = {};
+
+  // Проверка прав при загрузке
+  firebase.auth().onAuthStateChanged(user => {
+      if (!user || user.email !== 'admin@fenomen.ge') {
+          alert("წვდომა აკრძალულია!");
+          window.location.href = 'kabineti.html';
+      } else {
+          loadUsers();
+          loadHomeworks();
+      }
+  });
+
+  function switchTab(tabId) {
+      document.querySelectorAll('.tab-content').forEach(t => t.style.display = 'none');
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      document.getElementById(tabId).style.display = 'block';
+      event.currentTarget.classList.add('active');
+  }
+
+  function loadUsers() {
+      db.ref('users').on('value', snap => {
+          const table = document.getElementById('admin-user-table');
+          table.innerHTML = '';
+          snap.forEach(child => {
+              const u = child.val();
+              const uid = child.key;
+              allUsers[uid] = u.email;
+              if (u.email === 'admin@fenomen.ge') return;
+
+              const expiry = u.expiryDate ? new Date(u.expiryDate).toLocaleDateString() : 'გადაუხდელია';
+              const userLevel = u.level || 'A1';
+              const userPhone = u.phone || 'არ არის';
+              
+              table.innerHTML += `
+                <tr>
+                    <td>
+                        <b>${u.email}</b><br>
+                        <small>📞 ${userPhone}</small>
+                    </td>
+                    <td>
+                        <span class="level-badge ${userLevel}">${userLevel}</span><br>
+                        <b>${u.tariff || 'Standard'}</b><br>
+                        <small style="color:${u.expiryDate ? 'green' : 'red'}">ვადა: ${expiry}</small>
+                    </td>
+                    <td>
+                        <button class="btn-activate" onclick="activateMonth('${uid}')">+30 დღე</button><br>
+                        <select onchange="updateLevel('${uid}', this.value)" style="margin-top:5px; font-size:11px;">
+                            <option value="">დონის შეცვლა...</option>
+                            <option value="A1" ${userLevel==='A1'?'selected':''}>A1 (დამწყები)</option>
+                            <option value="B1" ${userLevel==='B1'?'selected':''}>B1 (საშუალო)</option>
+                            <option value="C1" ${userLevel==='C1'?'selected':''}>C1 (პროფესიონალი)</option>
+                        </select>
+                    </td>
+                    <td><input class="note-input" type="text" value="${u.adminNote || ''}" onblur="saveNote('${uid}', this.value)"></td>
+                </tr>`;
+          });
+          loadChatList();
+      });
+  }
+
+  function activateMonth(uid) {
+      const expiry = new Date();
+      expiry.setDate(expiry.getDate() + 30);
+      db.ref('users/' + uid).update({ expiryDate: expiry.toISOString() })
+      .then(() => alert("წვდომა გააქტიურდა 30 დღით!"));
+  }
+
+  function updateLevel(uid, level) { 
+      if(level) db.ref('users/' + uid).update({ level: level })
+      .then(() => alert("დონე განახლდა!")); 
+  }
+
+  function updateTariff(uid, t) { if(t) db.ref('users/' + uid).update({ tariff: t }); }
+  function saveNote(uid, n) { db.ref('users/' + uid).update({ adminNote: n }); }
+
+  function loadChatList() {
+      db.ref('messages').on('value', snap => {
+          const list = document.getElementById('admin-chat-list');
+          list.innerHTML = '<h4>ჩატები:</h4>';
+          snap.forEach(child => {
+              const uid = child.key;
+              const email = allUsers[uid] || uid;
+              list.innerHTML += `<div style="padding:10px; cursor:pointer; border-bottom:1px solid #eee;" onclick="openChat('${uid}', '${email}')">✉️ ${email}</div>`;
+          });
+      });
+  }
+
+  function openChat(uid, email) {
+      selectedUid = uid;
+      document.getElementById('active-chat-title').innerText = email;
+      db.ref('messages/' + uid).on('value', snap => {
+          const disp = document.getElementById('admin-messages-display');
+          disp.innerHTML = '';
+          snap.forEach(m => {
+              const val = m.val();
+              disp.innerHTML += `<div class="msg ${val.sender}">${val.text}</div>`;
+          });
+          disp.scrollTop = disp.scrollHeight;
+      });
+  }
+
+  function sendAdminMessage() {
+      const txt = document.getElementById('admin-reply-input').value;
+      if (!txt || !selectedUid) return;
+      db.ref('messages/' + selectedUid).push({ sender: 'teacher', text: txt, timestamp: Date.now() });
+      document.getElementById('admin-reply-input').value = '';
+  }
+
+  function loadHomeworks() {
+      db.ref('homeworks').on('value', snap => {
+          const list = document.getElementById('admin-hw-list');
+          list.innerHTML = '';
+          snap.forEach(child => {
+              const hw = child.val();
+              list.innerHTML += `<div class="card"><b>${hw.studentEmail}</b><p>${hw.answer}</p><textarea id="fb-${child.key}">${hw.feedback || ''}</textarea><button class="btn-action" onclick="sendFB('${child.key}')">შენახვა</button></div>`;
+          });
+      });
+  }
+  function sendFB(uid) {
+      const fb = document.getElementById('fb-' + uid).value;
+      db.ref('homeworks/' + uid).update({ feedback: fb, status: 'checked' });
+  }
+
+  function logout() { firebase.auth().signOut().then(() => window.location.href = 'kabineti.html'); }
+</script>
+</body>
+</html>

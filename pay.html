@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="ka">
+<head>
+    <meta charset="UTF-8">
+    <title>FENOMEN | ტარიფები და გადახდა</title>
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; background: #f4f7f6; margin: 0; padding: 40px 20px; display: flex; flex-direction: column; align-items: center; }
+        .pricing-container { display: flex; gap: 20px; flex-wrap: wrap; justify-content: center; max-width: 1000px; margin-top: 30px; }
+        .price-card { background: white; padding: 30px; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); text-align: center; width: 280px; border-top: 8px solid #ddd; transition: 0.3s; display: flex; flex-direction: column; }
+        .price-card:hover { transform: translateY(-10px); }
+        
+        .standard { border-top-color: #bdc3c7; }
+        .premium { border-top-color: #1a2a6c; }
+        .vip { border-top-color: #fdbb2d; }
+
+        .price { font-size: 36px; font-weight: bold; color: #1a2a6c; margin: 15px 0; }
+        .features { text-align: left; padding: 0; list-style: none; flex-grow: 1; font-size: 14px; color: #555; margin-bottom: 20px; }
+        .features li { margin-bottom: 12px; display: flex; align-items: center; }
+        .features li::before { content: "✓"; color: #28a745; margin-right: 8px; font-weight: bold; }
+        .features li.no::before { content: "✕"; color: #dc3545; }
+
+        .payment-info { background: white; margin-top: 40px; padding: 30px; border-radius: 20px; max-width: 550px; text-align: center; box-shadow: 0 5px 15px rgba(0,0,0,0.05); border: 2px dashed #1a2a6c; }
+        .iban { background: #eee; padding: 12px; border-radius: 8px; font-family: monospace; margin: 10px 0; display: block; font-size: 16px; font-weight: bold; color: #1a2a6c; }
+        .contact-btn { display: inline-block; background: #25d366; color: white; text-decoration: none; padding: 12px 25px; border-radius: 8px; font-weight: bold; margin-top: 10px; }
+    </style>
+</head>
+<body>
+
+    <h1 style="color: #1a2a6c; text-align: center;">აირჩიეთ სასურველი ტარიფი</h1>
+    <p style="color: #666; text-align: center;">FENOMEN - შენი გზა რუსული ენისკენ</p>
+
+    <div class="pricing-container">
+        <div class="price-card standard">
+            <h3>Standard</h3>
+            <div class="price">15 GEL</div>
+            <ul class="features">
+                <li>წვდომა საბაზისო ვიდეოებზე</li>
+                <li>სასწავლო მასალები</li>
+                <li class="no">ტესტები და დავალებები</li>
+                <li class="no">პირადი კონსულტაცია</li>
+            </ul>
+        </div>
+
+        <div class="price-card premium">
+            <h3>Premium</h3>
+            <div class="price">40 GEL</div>
+            <ul class="features">
+                <li>ყველა საბაზისო მასალა</li>
+                <li>ინტერაქტიული ტესტები</li>
+                <li>პრაქტიკული დავალებები</li>
+                <li class="no">პირადი კონსულტაცია</li>
+            </ul>
+        </div>
+
+        <div class="price-card vip">
+            <h3>VIP</h3>
+            <div class="price">80 GEL</div>
+            <ul class="features">
+                <li>სრული წვდომა ყველა მასალაზე</li>
+                <li>პირადი კონსულტაციები</li>
+                <li>ინდივიდუალური უკუკავშირი</li>
+                <li>პრიორიტეტული მხარდაჭერა</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="payment-info">
+        <h3>💳 გადახდის რეკვიზიტები (საქართველო)</h3>
+        <p>გადარიცხეთ თანხა არჩეული ტარიფის მიხედვით:</p>
+        <div style="text-align: left; margin: 20px 0;">
+            <strong>ბანკი:</strong> საქართველოს ბანკი<br>
+            <strong>მიმღები:</strong> ნიკ სიარგ (Nik Syarg)<br>
+            <strong>IBAN:</strong>
+            <span class="iban">GE04BG0000000530413131</span>
+        </div>
+        <p style="font-size: 15px; color: #333;">
+            გადახდის შემდეგ <b>აუცილებლად</b> გამოგვიგზავნეთ ჩეკი და თქვენი მეილი ტარიფის გასააქტიურებლად:
+        </p>
+        <a href="https://wa.me/995558551052" target="_blank" class="contact-btn">✅ ჩეკის გამოგზავნა</a>
+        <br><br>
+        <a href="course.html" style="text-decoration: none; color: #1a2a6c; font-size: 14px; font-weight: bold;">← უკან დაბრუნება</a>
+    </div>
+
+</body>
+</html>

@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="ka">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FENOMEN | სასწავლო კურსი</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;900&family=Noto+Sans+Georgian:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="fenomen.css">
+    <style>
+        body { background: #f4f7f6; margin: 0; font-family: 'Noto Sans Georgian', sans-serif; }
+        .dashboard-header {
+            background: #1a2a6c; color: white; padding: 40px 8%; text-align: center;
+            border-bottom-left-radius: 40px; border-bottom-right-radius: 40px;
+        }
+        .user-info { margin-top: 15px; font-size: 18px; opacity: 0.9; }
+        .level-section { padding: 30px 8% 10px; }
+        .level-title-admin { 
+            color: #1a2a6c; border-left: 8px solid #fdbb2d; padding-left: 15px; 
+            margin-bottom: 25px; font-size: 28px; font-weight: 900;
+        }
+        .lessons-grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px; padding-bottom: 40px;
+        }
+        .lesson-card {
+            background: white; padding: 25px; border-radius: 20px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.05); transition: 0.3s;
+            position: relative; border: 1px solid transparent;
+        }
+        .lesson-card.locked { opacity: 0.7; border: 1px dashed #ccc; }
+        .lesson-number { font-size: 12px; font-weight: 900; color: #fdbb2d; margin-bottom: 10px; display: block; }
+        .lesson-title { font-size: 20px; font-weight: 900; color: #1a2a6c; margin-bottom: 15px; }
+        .btn-watch {
+            display: inline-block; padding: 12px 20px; background: #1a2a6c;
+            color: white; text-decoration: none; border-radius: 10px; font-size: 14px; cursor: pointer; border: none; width: 100%;
+        }
+        .btn-watch.unlocked { background: #28a745; }
+        .lock-icon { font-size: 24px; position: absolute; top: 20px; right: 20px; }
+        .btn-logout { background: #ff4757; color: white; border: none; padding: 10px 20px; border-radius: 10px; cursor: pointer; margin-top: 20px; }
+        #loading-screen { text-align: center; padding: 100px; font-size: 24px; font-weight: bold; color: #1a2a6c; }
+        .admin-status { background: #fdbb2d; color: #1a2a6c; padding: 8px 15px; border-radius: 20px; font-size: 14px; font-weight: bold; margin-bottom: 15px; display: inline-block; box-shadow: 0 4px 10px rgba(253, 187, 45, 0.3); }
+        .accent { color: #fdbb2d; font-weight: 900; }
+    </style>
+</head>
+<body>
+
+    <div id="loading-screen">იტვირთება მონაცემები...</div>
+
+    <div id="main-content" style="display: none;">
+        <header class="dashboard-header">
+            <div id="admin-indicator" style="display:none;"><span class="admin-status">⚡ ADMIN MODE: ALL LEVELS ACTIVE</span></div>
+            <h1 id="welcome-msg">მოგესალმებით!</h1>
+            <div class="user-info" id="user-level-info">თქვენი დონე: <span id="user-level" class="accent">...</span></div>
+            <button class="btn-logout" onclick="logout()">გასვლა</button>
+        </header>
+
+        <div id="all-levels-container">
+            </div>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+    <script src="fenomen.js"></script>
+
+    <script>
+        const secretCodes = ["FEN01", "FEN02", "FEN03", "FEN04", "FEN05", "FEN06", "FEN07", "FEN08"];
+        const lessonThemes = {
+            "A1": ["ანბანი და გამოთქმა", "პირველი შეხვედრა", "ვინ ვარ მე?", "რიცხვები და დრო", "ჩემი ოჯახი", "საჭმელი და რესტორანი", "ყოველდღიური ფრაზები", "შეჯამება და ტესტი"],
+            "B1": ["წარსული დრო", "მომავალი დრო", "მაღაზიაში", "მოგზაურობა", "სამსახური", "ორიენტაცია ქალაქში", "რუსული კულტურა", "საშუალო ტესტი"],
+            "C1": ["რთული პადეჟები", "ბიზნეს რუსული", "ლიტერატურა", "დებატები", "იდიომები", "ჟარგონები", "ფილმების გარჩევა", "ფინალური სერტიფიკატი"]
+        };
+
+        function logout() {
+            auth.signOut().then(() => window.location.href = 'index.html');
+        }
+
+        auth.onAuthStateChanged(user => {
+            if (user) {
+                const isAdmin = (user.email === "admin@fenomen.ge");
+                const container = document.getElementById('all-levels-container');
+                
+                db.ref('users/' + user.uid).once('value').then(snapshot => {
+                    const data = snapshot.val() || {};
+                    const userLevel = data.level || "A1";
+                    
+                    document.getElementById('loading-screen').style.display = 'none';
+                    document.getElementById('main-content').style.display = 'block';
+                    document.getElementById('welcome-msg').innerText = "გამარჯობა, " + (user.email.split('@')[0]);
+
+                    container.innerHTML = '';
+
+                    if (isAdmin) {
+                        console.log("Admin detected: Showing all levels.");
+                        document.getElementById('admin-indicator').style.display = 'block';
+                        document.getElementById('user-level-info').style.display = 'none';
+                        renderLevelGroup(container, "A1", true);
+                        renderLevelGroup(container, "B1", true);
+                        renderLevelGroup(container, "C1", true);
+                    } else {
+                        console.log("Student detected: Showing level " + userLevel);
+                        document.getElementById('user-level').innerText = userLevel;
+                        renderLevelGroup(container, userLevel, false);
+                    }
+                });
+            } else {
+                window.location.href = "kabineti.html";
+            }
+        });
+
+        function renderLevelGroup(parent, level, unlocked) {
+            const section = document.createElement('div');
+            section.className = 'level-section';
+            section.innerHTML = `<h2 class="level-title-admin">${level} დონე</h2>`;
+            
+            const grid = document.createElement('div');
+            grid.className = 'lessons-grid';
+            
+            const themes = lessonThemes[level];
+            for (let i = 1; i <= 8; i++) {
+                const card = document.createElement('div');
+                card.className = unlocked ? 'lesson-card' : 'lesson-card locked';
+                const icon = unlocked ? '🔓' : '🔒';
+                const btnText = unlocked ? 'ყურება ➔' : 'გახსნა (შეიყვანეთ კოდი)';
+                const btnClass = unlocked ? 'btn-watch unlocked' : 'btn-watch';
+
+                card.innerHTML = `
+                    <div class="lock-icon">${icon}</div>
+                    <span class="lesson-number">გაკვეთილი ${i}</span>
+                    <div class="lesson-title">${themes[i-1]}</div>
+                    <button class="${btnClass}" onclick="${unlocked ? "goToLesson('"+level+"',"+i+")" : "unlockLesson(this,"+i+")"}">${btnText}</button>
+                `;
+                grid.appendChild(card);
+            }
+            section.appendChild(grid);
+            parent.appendChild(section);
+        }
+
+        function unlockLesson(btn, index) {
+            const code = prompt("შეიყვანეთ გაკვეთილის კოდი:");
+            if (code === secretCodes[index-1]) {
+                alert("დადასტურებულია! გაკვეთილი გაიხსნა.");
+                btn.innerText = "ყურება ➔";
+                btn.className = "btn-watch unlocked";
+                btn.onclick = () => alert("მასალა მალე დაემატება!");
+                btn.parentElement.querySelector('.lock-icon').innerText = "🔓";
+                btn.parentElement.classList.remove('locked');
+            } else {
+                alert("არასწორი კოდი!");
+            }
+        }
+
+        function goToLesson(level, index) {
+            alert("დონე: " + level + " | გაკვეთილი: " + index + "\nკონტენტი მალე დაემატება!");
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="ka">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FENOMEN | პირადი კაბინეტი</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;900&family=Noto+Sans+Georgian:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="fenomen.css">
+    <style>
+        body {
+            background: #f4f7f6;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+        .auth-container {
+            background: white;
+            padding: 40px;
+            border-radius: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+        }
+        .auth-logo {
+            font-size: 32px;
+            font-weight: 900;
+            color: #1a2a6c;
+            margin-bottom: 30px;
+        }
+        .auth-tabs {
+            display: flex;
+            margin-bottom: 25px;
+            border-bottom: 2px solid #eee;
+        }
+        .tab {
+            flex: 1;
+            padding: 10px;
+            cursor: pointer;
+            font-weight: bold;
+            color: #666;
+            transition: 0.3s;
+        }
+        .tab.active {
+            color: #1a2a6c;
+            border-bottom: 2px solid #fdbb2d;
+        }
+        input {
+            width: 100%;
+            padding: 12px 15px;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            box-sizing: border-box;
+            font-family: inherit;
+        }
+        .btn-auth {
+            width: 100%;
+            padding: 15px;
+            background: #1a2a6c;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 15px;
+            transition: 0.3s;
+        }
+        .btn-auth:hover {
+            background: #fdbb2d;
+            color: #1a2a6c;
+        }
+        .form-box {
+            display: none;
+        }
+        .form-box.active {
+            display: block;
+        }
+        .back-home {
+            display: block;
+            margin-top: 20px;
+            color: #1a2a6c;
+            text-decoration: none;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="auth-container">
+        <div class="auth-logo">FENOMEN</div>
+        
+        <div class="auth-tabs">
+            <div class="tab active" onclick="switchTab('login')">შესვლა</div>
+            <div class="tab" onclick="switchTab('register')">რეგისტრაცია</div>
+        </div>
+
+        <div id="login-box" class="form-box active">
+            <form id="login-form">
+                <input type="email" id="login-email" placeholder="ელ-ფოსტა" required>
+                <input type="password" id="login-pass" placeholder="პაროლი" required>
+                <button type="submit" class="btn-auth">ავტორიზაცია</button>
+            </form>
+        </div>
+
+        <div id="register-box" class="form-box">
+            <form id="register-form">
+                <input type="email" id="reg-email" placeholder="ელ-ფოსტა" required>
+                <input type="password" id="reg-pass" placeholder="პაროლი (მინ. 6 სიმბოლო)" required minlength="6">
+                <input type="text" id="reg-phone" placeholder="ტელეფონის ნომერი (მაგ: 558...)" required>
+                <p style="font-size: 12px; color: #777; margin-top: 10px;">
+                    რეგისტრაციისას ავტომატურად შეინახება თქვენი ტესტის შედეგი.
+                </p>
+                <button type="submit" class="btn-auth">შექმენი პროფილი</button>
+            </form>
+        </div>
+
+        <a href="index.html" class="back-home">← მთავარ გვერდზე დაბრუნება</a>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+    
+    <script src="fenomen.js"></script>
+
+    <script>
+        function switchTab(tab) {
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.form-box').forEach(f => f.classList.remove('active'));
+            
+            if (tab === 'login') {
+                document.getElementById('login-box').classList.add('active');
+                document.querySelectorAll('.tab')[0].classList.add('active');
+            } else {
+                document.getElementById('register-box').classList.add('active');
+                document.querySelectorAll('.tab')[1].classList.add('active');
+            }
+        }
+    </script>
+
+</body>
+</html>

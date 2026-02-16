@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="ka">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FENOMEN | ისწავლე რუსული ენა</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;900&family=Noto+Sans+Georgian:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="fenomen.css">
+    <style>
+        @keyframes pulse-red {
+            0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 71, 87, 0.7); }
+            70% { transform: scale(1.05); box-shadow: 0 0 0 10px rgba(255, 71, 87, 0); }
+            100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 71, 87, 0); }
+        }
+        .live-pulse { 
+            animation: pulse-red 2s infinite; 
+            background: #ff4757; color: white; padding: 5px 15px; border-radius: 20px; 
+            font-size: 12px; font-weight: 900; display: inline-block; margin-bottom: 15px; 
+        }
+        .timer-display {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 28px; font-weight: 900; letter-spacing: 2px; margin: 15px 0;
+        }
+        .accent { color: #fdbb2d; }
+        .highlight-level { border: 5px solid #fdbb2d !important; transform: scale(1.05); transition: 0.5s; box-shadow: 0 0 30px rgba(253, 187, 45, 0.5); }
+    </style>
+</head>
+<body>
+
+    <header>
+        <nav class="navbar">
+            <div class="logo">FENOMEN</div>
+            <ul class="nav-links">
+                <li><a href="#about">ჩემს შესახებ</a></li>
+                <li><a href="alphabet.html">ანბანი</a></li>
+                <li><a href="#services">სერვისები</a></li>
+                <li><a href="#test-section">ტესტი</a></li>
+                <li><a href="#pricing">ფასები</a></li>
+                <li><a href="kabineti.html" class="nav-btn-login">შესვლა</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <section class="hero">
+        <div class="hero-overlay"></div>
+        <div class="hero-content">
+            <h1>ისწავლე რუსული <span class="accent">ფენომენალურად</span></h1>
+            <p>პლატფორმა მათთვის, ვისაც სურს ენის შესწავლა ნულიდან.</p>
+            <a href="#test-section" class="btn-primary">გაიარე ტესტი</a>
+        </div>
+    </section>
+
+    <section id="about" style="padding: 80px 8%; background: #fff;">
+        <div style="display: flex; align-items: center; gap: 50px; flex-wrap: wrap; justify-content: center;">
+            <div style="flex: 1; min-width: 300px; max-width: 400px;">
+                <div style="width: 100%; height: 400px; background: url('my-photo.jpg') center/cover; border-radius: 30px; border-bottom: 10px solid #fdbb2d; box-shadow: 0 20px 40px rgba(0,0,0,0.1);"></div>
+            </div>
+            <div style="flex: 1; min-width: 300px; text-align: left;">
+                <h2 style="font-size: 32px; color: #1a2a6c; font-weight: 900;">გამარჯობა, მე ვარ ნიკ სიარგ</h2>
+                <p style="font-size: 18px; color: #555; margin: 20px 0;">მე დაგეხმარებით რუსული ენის ათვისებაში მარტივი და ეფექტური მეთოდებით.</p>
+                <a href="https://wa.me/995558551052" class="btn-primary" style="background:#25D366; color:white; border:none; text-decoration:none;">მომწერე WhatsApp-ში</a>
+            </div>
+        </div>
+    </section>
+
+    <section style="padding: 60px 8%; background: #f4f7f6;">
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; max-width: 1100px; margin: 0 auto;">
+            <div style="background: #1a2a6c; color: white; padding: 40px; border-radius: 30px; text-align: center;">
+                <div class="live-pulse">🔴 LIVE მასტერკლასი</div>
+                <h3 style="font-size: 24px;">უფასო გაკვეთილი</h3>
+                <div id="webinar-timer" class="timer-display" style="color: #fdbb2d;">00:00:00:00</div>
+                <a href="webinar.html" class="btn-primary" style="background: #fdbb2d; color: #1a2a6c; text-decoration: none; padding: 12px 25px; border-radius: 10px; font-weight: bold; display: inline-block;">დაიკავე ადგილი ➔</a>
+            </div>
+            <div style="background: white; color: #1a2a6c; padding: 40px; border-radius: 30px; text-align: center; border: 2px solid #eee;">
+                <h3 style="font-size: 24px;">უფასო კონსულტაცია</h3>
+                <div id="consult-timer" class="timer-display" style="color: #ff4757;">00:00:00:00</div>
+                <a href="https://docs.google.com/forms/d/e/1FAIpQLSc5xgdvsHEMqGhDtFFEzA-r5Fp242hLKqMW8LaEjdDqzza_lw/viewform" target="_blank" class="btn-primary" style="background: #1a2a6c; color: white; text-decoration: none; padding: 12px 25px; border-radius: 10px; font-weight: bold; display: inline-block;">ანკეტის შევსება 📝</a>
+            </div>
+        </div>
+    </section>
+
+    <section id="test-section" style="background: #f4f7f6; padding: 100px 0;">
+        <div class="container" style="max-width: 700px; margin: 0 auto; background: white; padding: 40px; border-radius: 30px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.05);">
+            <div id="quiz-step">
+                <h2 style="color: #1a2a6c; margin-bottom: 15px;">შეამოწმე შენი ცოდნა</h2>
+                <p id="question-text" style="font-size: 22px; margin-bottom: 30px; font-weight: bold;">მზად ხარ დასაწყებად?</p>
+                <div id="answer-buttons">
+                    <button class="btn-primary" onclick="loadMainQuiz()">ტესტის დაწყება</button>
+                </div>
+            </div>
+            <div id="result-step" style="display: none;">
+                <h2 id="praise-title" style="color: #1a2a6c;">შედეგი</h2>
+                <p id="score-text" style="font-size: 60px; font-weight: 900; color: #fdbb2d;">0/10</p>
+                <p id="level-recommendation" style="font-weight: bold; color: #1a2a6c; margin-top: 10px;"></p>
+                <button class="btn-card" onclick="location.reload()">თავიდან სცადე</button>
+            </div>
+        </div>
+    </section>
+
+    <section id="pricing" style="padding: 100px 8%;">
+        <h2 class="section-title" style="text-align: center; margin-bottom: 40px;">შეარჩიე შენი დონე</h2>
+        <div class="grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 30px;">
+            <div id="level-a1" class="option-card" style="text-align: center; padding: 30px; border: 1px solid #eee; border-radius: 20px;">
+                <div style="font-size: 24px; font-weight: 900; color: #1a2a6c; margin-bottom: 10px;">A1 დონე</div>
+                <div style="font-size: 32px; font-weight: 900; margin: 15px 0; color: #1a2a6c;">15 ₾</div>
+                <p>იდეალურია დამწყებთათვის.</p>
+                <a href="https://wa.me/995558551052?text=მსურს_A1_დონე" class="btn-card">ყიდვა</a>
+            </div>
+            <div id="level-b1" class="option-card pro" style="text-align: center; padding: 30px; border: 1px solid #eee; border-radius: 20px; position: relative;">
+                <div style="font-size: 24px; font-weight: 900; color: #1a2a6c; margin-bottom: 10px;">B1 დონე</div>
+                <div style="font-size: 32px; font-weight: 900; margin: 15px 0; color: #1a2a6c;">40 ₾</div>
+                <p>საბაზისო ცოდნის მქონეთათვის.</p>
+                <a href="https://wa.me/995558551052?text=მსურს_B1_დონე" class="btn-card alt">ყიდვა</a>
+            </div>
+            <div id="level-c1" class="option-card newbie" style="text-align: center; padding: 30px; border: 1px solid #eee; border-radius: 20px;">
+                <div style="font-size: 24px; font-weight: 900; color: #1a2a6c; margin-bottom: 10px;">C1 დონე</div>
+                <div style="font-size: 32px; font-weight: 900; margin: 15px 0; color: #1a2a6c;">80 ₾</div>
+                <p>პროფესიონალური დახვეწა.</p>
+                <a href="https://wa.me/995558551052?text=მსურს_C1_დონე" class="btn-card">დაჯავშნა</a>
+            </div>
+        </div>
+    </section>
+
+    <footer id="contact" style="padding: 80px 8%; background: #1a2a6c; color: white; text-align: center;">
+        <h2 style="color:white; margin-bottom: 20px;">დაგვიკავშირდით</h2>
+        <div style="font-size: 36px; font-weight: 900; color: #fdbb2d; margin-bottom: 30px;">+995 558 55 10 52</div>
+        <div style="display: flex; justify-content: center; gap: 20px; flex-wrap: wrap;">
+            <a href="tel:+995558551052" class="btn-primary" style="background: #fff; color: #1a2a6c; border: none; text-decoration: none; padding: 12px 25px; border-radius: 10px; font-weight: bold;">დამირეკე</a>
+            <a href="https://wa.me/995558551052" class="btn-primary" style="background: #25D366; color: white; border: none; text-decoration: none; padding: 12px 25px; border-radius: 10px; font-weight: bold;">მომწერე WhatsApp</a>
+        </div>
+        <p style="margin-top: 50px; opacity: 0.5;">&copy; 2026 FENOMEN - ყველა უფლება დაცულია</p>
+    </footer>
+
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+    <script src="fenomen.js"></script>
+
+    <script>
+        function initCountdown(dateStr, elementId) {
+            const timerEl = document.getElementById(elementId);
+            if(!timerEl) return;
+            const targetDate = new Date(dateStr).getTime();
+            setInterval(() => {
+                const now = new Date().getTime();
+                const diff = targetDate - now;
+                if (diff < 0) { timerEl.innerHTML = "00:00:00:00"; return; }
+                const d = Math.floor(diff / (1000 * 60 * 60 * 24));
+                const h = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+                const s = Math.floor((diff % (1000 * 60)) / 1000);
+                timerEl.innerHTML = (d<10?"0"+d:d)+":"+(h<10?"0"+h:h)+":"+(m<10?"0"+m:m)+":"+(s<10?"0"+s:s);
+            }, 1000);
+        }
+        initCountdown("February 1, 2026 20:00:00", "webinar-timer");
+        initCountdown("January 30, 2026 23:59:59", "consult-timer");
+    </script>
+</body>
+</html>

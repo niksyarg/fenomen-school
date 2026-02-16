@@ -1,0 +1,37 @@
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: 'Noto Sans Georgian', sans-serif; background-color: #f4f7f6; scroll-behavior: smooth; }
+
+/* Навигация */
+.navbar { display: flex; justify-content: space-between; align-items: center; padding: 20px 8%; background: #fff; position: sticky; top: 0; z-index: 1000; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
+.logo { font-family: 'Montserrat', sans-serif; font-size: 26px; font-weight: 900; color: #1a2a6c; }
+.nav-links { display: flex; list-style: none; gap: 25px; align-items: center; }
+.nav-links a { text-decoration: none; color: #333; font-weight: 700; }
+
+.nav-btn-login { background: #fdbb2d; color: #1a2a6c !important; padding: 12px 25px; border-radius: 12px; font-weight: 900; box-shadow: 0 4px 10px rgba(253, 187, 45, 0.3); }
+
+/* Hero */
+.hero { position: relative; height: 80vh; background: url('https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?auto=format&fit=crop&q=80') center/cover; display: flex; align-items: center; justify-content: center; color: white; text-align: center; }
+.hero-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(135deg, rgba(26, 42, 108, 0.9), rgba(178, 31, 31, 0.8)); }
+.hero-content { position: relative; z-index: 1; max-width: 800px; padding: 0 20px; }
+.hero h1 { font-size: clamp(32px, 5vw, 60px); font-weight: 900; margin-bottom: 20px; }
+.accent { color: #fdbb2d; }
+
+/* Карточки БУКВ (Жирный дизайн) */
+.option-card { background: white; padding: 30px; border-radius: 25px; width: 100%; max-width: 350px; box-shadow: 0 15px 35px rgba(0,0,0,0.05); transition: 0.4s; border-top: 8px solid #1a2a6c; text-align: center; }
+.option-card:hover { transform: translateY(-10px); box-shadow: 0 20px 40px rgba(0,0,0,0.1); }
+.option-card.mini { max-width: 140px; padding: 20px; }
+
+.letter { font-size: 48px; font-weight: 900; color: #1a2a6c; margin-bottom: 5px; display: block; }
+.transcription { font-size: 18px; color: #b21f1f; font-weight: 800; }
+
+/* Кнопки */
+.btn-primary { display: inline-block; padding: 18px 45px; background: #fdbb2d; color: #1a2a6c; text-decoration: none; border-radius: 50px; font-weight: 900; margin-top: 20px; }
+.btn-card { display: block; padding: 15px; background: #1a2a6c; color: white; text-decoration: none; border-radius: 12px; margin-top: 20px; font-weight: 900; border: none; cursor: pointer; }
+.btn-card.alt { background: #b21f1f; }
+
+/* Таймер */
+.timer-bar { width: 100%; height: 10px; background: #eee; border-radius: 5px; margin-bottom: 20px; overflow: hidden; }
+#timer-progress { width: 100%; height: 100%; background: #fdbb2d; transition: width 1s linear; }
+
+.grid { display: flex; gap: 20px; justify-content: center; flex-wrap: wrap; padding: 40px 0; }
+.section-title { font-size: 32px; font-weight: 900; color: #1a2a6c; text-align: center; margin-top: 60px; }
